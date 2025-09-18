@@ -1,0 +1,55 @@
+name: Node.js CI/CD
+
+on:
+  push:
+    branches: [ "development", "staging", "main" ]
+  pull_request:
+    branches: [ "development", "staging", "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test --if-present
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Deploy to environment
+        run: |
+          if [[ "${GITHUB_REF##*/}" == "development" ]]; then
+            echo "🚀 Deploying to DEVELOPMENT server"
+            # Add your dev deploy command here
+          elif [[ "${GITHUB_REF##*/}" == "staging" ]]; then
+            echo "🚀 Deploying to STAGING server"
+            # Add your staging deploy command here
+          elif [[ "${GITHUB_REF##*/}" == "main" ]]; then
+            echo "🚀 Deploying to PRODUCTION server"
+            # Add your production deploy command here
+          fi
