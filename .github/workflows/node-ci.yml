@@ -22,7 +22,6 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # ✅ Skip tests for now
       - name: Run tests (skipped)
         run: echo "No tests defined. Skipping..."
 
